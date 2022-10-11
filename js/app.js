@@ -29,11 +29,11 @@ class Game {
     message;
 
     constructor(players) {
+        this.gameBoard = new GameBoard;
         this.players = [];
         for (let i = 1; i <= players; i++) {
             this.players[i] = new Player(i);
         }
-        this.gameBoard = new GameBoard;
         this.spinner = new Spinner;
         this.turn = 1;
 
@@ -69,7 +69,7 @@ class Game {
         }
         else {
             let pos = this.gameBoard.checkBoard(this.players[this.turn].getPos());
-            this.players[this.turn].setPos(pos.boardNumber, pos.x, pos.y);
+            this.players[this.turn].setPos(pos.boardNumber, pos.element.x, pos.element.y);
             console.log("ends on: " + this.players[this.turn].getPos());
             console.log("");
             this.turn ++;
@@ -114,7 +114,7 @@ class Player {
         this.number = number;
         this.boardPos = 1;
 
-        console.log(this.number);
+        //console.log(this.number);
 
         this.playerMarker = document.createElementNS("http://www.w3.org/2000/svg", "circle");
 
@@ -151,6 +151,7 @@ class Player {
 
 class GameBoardSpace {
     endPosition;
+    element;
     x;
     y;
 
@@ -162,8 +163,7 @@ class GameBoardSpace {
 
         let pos = {
             boardNumber : this.endPosition,
-            x: this.x,
-            y: this.y
+            element : this.element
         }
 
         return pos;
@@ -241,58 +241,168 @@ class GameBoardSpace {
         // if in the bottom row (1)
         if (index < 10) {
 
-            console.log("index" + index);
+            let y = 950; //y position for entire row
+            let x = index * 100 + 50; //column 1 is at 50px, then 150, 250 and so on
+            //console.log("Row 1: " + (index * 100 + 50))
+            this.element = {
+                x: x,
+                y: y
+            }
 
-            this.y = 950; //y position for entire row
-            this.x = index * 100 + 50; //column 1 is at 50px, then 150, 250 and so on
-
-            console.log(index * 100 + 50);
         } //if in row 2
         else if (index >= 10 && index < 20) {
-            this.y = 850; //y position for entire row
 
-
+            let y = 850; //y position for entire row
             let rowIndex = Math.abs((index - 10) - 9); //column 1 is 
+            let x = rowIndex * 100 + 50;
+            //console.log("Row 2: " + (rowIndex * 100 + 50))
+            this.element = {
+                x: x,
+                y: y
+            }
 
-            console.log(rowIndex * 100 + 50);
-
-            
-            this.x = rowIndex * 100 + 50;
         } //if in row 3
         else if (index >= 20 && index < 30) {
-            this.y = 750;
-            this.x = index * 100 + 50;
+
+            let y = 750;
+            let x = (index * 100 + 50) - 2000;
+            //console.log("Row 3: " + ((index * 100 + 50) - 2000))
+            this.element = {
+                x: x,
+                y: y
+            }
+
         } //if in row 4
         else if (index >= 30 && index < 40) {
-            this.y = 650;
-            this.x = index * 100 + 50;
+
+            let y = 650;
+            let rowIndex = Math.abs((index - 30) - 9); //column 1 is 
+            let x = rowIndex * 100 + 50;
+            //console.log("Row 4: " + (rowIndex * 100 + 50))
+            this.element = {
+                x: x,
+                y: y
+            }
+
         } //if in row 5
         else if (index >= 40 && index < 50) {
-            this.y = 550;
-            this.x = index * 100 + 50;
+
+            let y = 550;
+            let x = (index * 100 + 50) - 4000;
+            //console.log("Row 5: " + ((index * 100 + 50) - 4000))
+            this.element = {
+                x: x,
+                y: y
+            }
+
+
         } //if in row 6
         else if (index >= 50 && index < 60) {
-            this.y = 450;
-            this.x = index * 100 + 50;
+
+            let y = 450;
+            let rowIndex = Math.abs((index - 50) - 9); //column 1 is 
+            let x = rowIndex * 100 + 50;
+            //console.log("Row 6: " + (rowIndex * 100 + 50))
+            this.element = {
+                x: x,
+                y: y
+            }
+
+
+
         } //if in row 7
         else if (index >= 60 && index < 70) {
-            this.y = 350;
-            this.x = index * 100 + 50;
+
+            let y = 350;
+            let x = (index * 100 + 50) - 6000;
+            //console.log("Row 7: " + ((index * 100 + 50) - 6000))
+            this.element = {
+                x: x,
+                y: y
+            }
+
+
+
         } //if in row 8
         else if (index >= 70 && index < 80) {
-            this.y = 250;
-            this.x = index * 100 + 50;
+
+            let y = 250;
+            let rowIndex = Math.abs((index - 70) - 9); //column 1 is 
+            let x = rowIndex * 100 + 50;
+            //console.log("Row 8: " + (rowIndex * 100 + 50))
+            this.element = {
+                x: x,
+                y: y
+            }
+
+
+
         } //if in row 9
         else if (index >= 80 && index < 90) {
-            this.y = 150;
-            this.x = index * 100 + 50;
+
+            let y = 150;
+            let x = (index * 100 + 50) - 8000;
+            //console.log("Row 9: " + ((index * 100 + 50) - 8000))
+            this.element = {
+                x: x,
+                y: y
+            }
+
+
         } //if in row 10 (the top row)
         else {
-            this.y = 50;
-            this.x = index * 100 + 50;
+
+            let y = 50;
+            let rowIndex = Math.abs((index - 90) - 9); //column 1 is 
+            let x = rowIndex * 100 + 50;
+            //console.log("Row 10: " + (rowIndex * 100 + 50))
+            this.element = {
+                x: x,
+                y: y
+            }
+
+
+
         }
 
+
+
+        this.element.svg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+
+        //this.playerMarker.setAttribute('id', this.number);
+        //this.playerMarker.classList.add("player" + this.number);
+        this.element.svg.setAttribute("x", this.element.x - 50);
+        this.element.svg.setAttribute("width", 100);
+        this.element.svg.setAttribute("y", this.element.y -50);
+        this.element.svg.setAttribute("height", 100);
+
+        if(space % 2 == 0) {
+            this.element.svg.setAttribute("fill", "yellow")
+
+        } else {
+            this.element.svg.setAttribute("fill", "lightyellow")
+        }
+
+
+        //uncomment to show gameboard
+        svg.appendChild(this.element.svg);
+
+
+
+
+
+
     }
+
+
+    getPos() {
+        return this.element
+    }
+
+
+
+
+
 }
 
 
@@ -308,6 +418,8 @@ class GameBoard {
 
             this.gameboard[i] = new GameBoardSpace(i);
             this.gameboard[i].gameLogic(i);
+            //console.log(i)
+            //console.log(this.gameboard[i].getPos())
 
         }
 
