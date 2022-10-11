@@ -19,7 +19,6 @@ function startGame(players) {
 }
 
 
-
 class Game {
 
     gameBoard; // an array of gameBoardSpace objects
@@ -96,8 +95,6 @@ class Game {
 }
 
 
-
-
 class Spinner {
     thisSpin;
     spin() {
@@ -115,7 +112,6 @@ class Spinner {
 }
 
 
-
 class Player {
     number;
     boardPos;
@@ -125,15 +121,10 @@ class Player {
         this.number = number;
         this.boardPos = 1;
 
-        //console.log(this.number);
-
         this.playerMarker = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-
-        //this.playerMarker.setAttribute('id', this.number);
         this.playerMarker.classList.add("player" + this.number);
         this.playerMarker.setAttribute("cx", 50 + (number * 3));
         this.playerMarker.setAttribute("cy", 950 + (number * 3));
-
         svg.appendChild(this.playerMarker);
 
     }
@@ -151,8 +142,10 @@ class Player {
     }
 
     setPos(position, x, y) {
+        //update the player object position
         this.boardPos = position;
 
+        //animate player marker movement
         gsap.to(this.playerMarker, {duration: 1, attr: {cx: x, cy: y}, ease: "none"});
 
     }
@@ -184,11 +177,11 @@ class GameBoardSpace {
 
         // update ending positon for spaces that are chutes or ladders
         switch (space) {
-            case 16:
+            case 16:                            // board space 16 is the top of a "chute" on the gameboard
                 this.defaultPos(space);
                 this.setSVG(space);
-                this.endPosition = 6;
-                this.element.x = 550;
+                this.endPosition = 6;           // is a player lands on space 16 they slide down the chute to space 6
+                this.element.x = 550;           
                 this.element.y = 950;              
                 break;
             case 47:
@@ -255,7 +248,6 @@ class GameBoardSpace {
                 this.element.y = 250;
                 break;
             case 1:
-
                 this.defaultPos(space);
                 this.setSVG(space);
                 this.endPosition = 38;
@@ -263,7 +255,6 @@ class GameBoardSpace {
                 this.element.y = 650;
                 break;
             case 4:
-
                 this.defaultPos(space);
                 this.setSVG(space);
                 this.endPosition = 14;
@@ -271,7 +262,6 @@ class GameBoardSpace {
                 this.element.y = 850;
                 break;
             case 9:
-
                 this.defaultPos(space);
                 this.setSVG(space);
                 this.endPosition = 31;
@@ -328,16 +318,6 @@ class GameBoardSpace {
         }
 
 
-
-
-
-
-
-
-
-
-
-
     }
 
     //set svg position for spaces that arent chutes or ladders
@@ -346,130 +326,110 @@ class GameBoardSpace {
                 //index is the board space - 1
                 let index = space - 1;
 
-                // if in the bottom row (1)
+                // if board space is 1-10 then set position at bottom of SVG
                 if (index < 10) {
         
                     let y = 950; //y position for entire row
                     let x = index * 100 + 50; //column 1 is at 50px, then 150, 250 and so on
-                    //console.log("Row 1: " + (index * 100 + 50))
                     this.element = {
                         x: x,
                         y: y
                     }
         
-                } //if in row 2
+                } //if board space is 11-20 then set positon near the bottom of the SVG
                 else if (index >= 10 && index < 20) {
         
                     let y = 850; //y position for entire row
-                    let rowIndex = Math.abs((index - 10) - 9); //column 1 is 
+                    let rowIndex = Math.abs((index - 10) - 9); //subtract lowest number space in this row to reset index for this row, reverse order for alternating rows
                     let x = rowIndex * 100 + 50;
-                    //console.log("Row 2: " + (rowIndex * 100 + 50))
                     this.element = {
                         x: x,
                         y: y
                     }
         
-                } //if in row 3
+                } //if board space is 21-30 then set positon near the bottom of the SVG
                 else if (index >= 20 && index < 30) {
         
                     let y = 750;
                     let x = (index * 100 + 50) - 2000;
-                    //console.log("Row 3: " + ((index * 100 + 50) - 2000))
                     this.element = {
                         x: x,
                         y: y
                     }
         
-                } //if in row 4
+                } //if board space is 31-40 then set positon near the middle of the SVG
                 else if (index >= 30 && index < 40) {
         
                     let y = 650;
-                    let rowIndex = Math.abs((index - 30) - 9); //column 1 is 
+                    let rowIndex = Math.abs((index - 30) - 9); //subtract lowest number space in this row to reset index for this row, reverse order for alternating rows
                     let x = rowIndex * 100 + 50;
-                    //console.log("Row 4: " + (rowIndex * 100 + 50))
                     this.element = {
                         x: x,
                         y: y
                     }
         
-                } //if in row 5
+                } //if board space is 41-50 then set positon in the middle of the SVG
                 else if (index >= 40 && index < 50) {
         
                     let y = 550;
                     let x = (index * 100 + 50) - 4000;
-                    //console.log("Row 5: " + ((index * 100 + 50) - 4000))
                     this.element = {
                         x: x,
                         y: y
                     }
         
-        
-                } //if in row 6
+                } //if board space is 51-60 then set positon near the middle of the SVG
                 else if (index >= 50 && index < 60) {
         
                     let y = 450;
-                    let rowIndex = Math.abs((index - 50) - 9); //column 1 is 
+                    let rowIndex = Math.abs((index - 50) - 9); //subtract lowest number space in this row to reset index for this row, reverse order for alternating rows
                     let x = rowIndex * 100 + 50;
-                    //console.log("Row 6: " + (rowIndex * 100 + 50))
                     this.element = {
                         x: x,
                         y: y
                     }
         
-        
-        
-                } //if in row 7
+                } //if board space is 61-70 then set positon near the middle of the SVG
                 else if (index >= 60 && index < 70) {
         
                     let y = 350;
                     let x = (index * 100 + 50) - 6000;
-                    //console.log("Row 7: " + ((index * 100 + 50) - 6000))
                     this.element = {
                         x: x,
                         y: y
                     }
         
-        
-        
-                } //if in row 8
+                } //if board space is 71-80 then set positon near the top of the SVG
                 else if (index >= 70 && index < 80) {
         
                     let y = 250;
-                    let rowIndex = Math.abs((index - 70) - 9); //column 1 is 
+                    let rowIndex = Math.abs((index - 70) - 9); //subtract lowest number space in this row to reset index for this row, reverse order for alternating rows 
                     let x = rowIndex * 100 + 50;
-                    //console.log("Row 8: " + (rowIndex * 100 + 50))
                     this.element = {
                         x: x,
                         y: y
                     }
         
-        
-        
-                } //if in row 9
+                } //if board space is 81-90 then set positon near the top of the SVG
                 else if (index >= 80 && index < 90) {
         
                     let y = 150;
                     let x = (index * 100 + 50) - 8000;
-                    //console.log("Row 9: " + ((index * 100 + 50) - 8000))
                     this.element = {
                         x: x,
                         y: y
                     }
         
-        
-                } //if in row 10 (the top row)
+                } //if board space is 91-100 then set positon at the top of the SVG
                 else {
         
                     let y = 50;
-                    let rowIndex = Math.abs((index - 90) - 9); //column 1 is 
+                    let rowIndex = Math.abs((index - 90) - 9); //subtract lowest number space in this row to reset index for this row, reverse order for alternating rows 
                     let x = rowIndex * 100 + 50;
-                    //console.log("Row 10: " + (rowIndex * 100 + 50))
                     this.element = {
                         x: x,
                         y: y
                     }
-        
-        
         
                 }
 
@@ -478,8 +438,6 @@ class GameBoardSpace {
     setSVG(space) {
         this.element.svg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 
-        //this.playerMarker.setAttribute('id', this.number);
-        //this.playerMarker.classList.add("player" + this.number);
         this.element.svg.setAttribute("x", this.element.x - 50);
         this.element.svg.setAttribute("width", 100);
         this.element.svg.setAttribute("y", this.element.y -50);
@@ -503,9 +461,6 @@ class GameBoardSpace {
     }
 
 
-
-
-
 }
 
 
@@ -521,8 +476,6 @@ class GameBoard {
 
             this.gameboard[i] = new GameBoardSpace(i);
             this.gameboard[i].gameLogic(i);
-            //console.log(i)
-            //console.log(this.gameboard[i].getPos())
 
         }
 
