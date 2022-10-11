@@ -53,7 +53,11 @@ class Game {
 
         if (this.players[this.turn].getPos() == 100 | this.players[this.turn].getPos() == 80) {
 
-            this.players[this.turn].setPos(this.gameBoard.checkBoard(this.players[this.turn].getPos()));
+            //player lands on 80 or 100, they win the game
+
+            let pos = this.gameBoard.checkBoard(this.players[this.turn].getPos());
+
+            this.players[this.turn].setPos(pos.boardNumber, pos.element.x, pos.element.y);
             messageText.innerText = "Player " + this.turn + " wins!";
             //this.setMessage("Player " + this.turn + " wins!");
             console.log("ends on: " + this.players[this.turn].getPos());
@@ -63,11 +67,18 @@ class Game {
             playButton.style.display = "none";
         }
         else if (this.players[this.turn].getPos() > 100) {
-            this.players[this.turn].setPos(this.players[this.turn].getPos() - this.spinner.getLastSpin());
+
+            //if the player position passes the end of the gameboard, subtract the last spin from thier position
+
+            let pos = this.gameBoard.checkBoard(this.players[this.turn].getPos() - this.spinner.getLastSpin())
+            this.players[this.turn].setPos(pos.boardNumber, pos.element.x, pos.element.y);
             console.log("ends on: " + this.players[this.turn].getPos());
             this.turn ++;
         }
         else {
+
+            //normal turn
+
             let pos = this.gameBoard.checkBoard(this.players[this.turn].getPos());
             this.players[this.turn].setPos(pos.boardNumber, pos.element.x, pos.element.y);
             console.log("ends on: " + this.players[this.turn].getPos());
@@ -174,199 +185,297 @@ class GameBoardSpace {
         // update ending positon for spaces that are chutes or ladders
         switch (space) {
             case 16:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 6;
+                this.element.x = 550;
+                this.element.y = 950;              
                 break;
             case 47:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 26;
+                this.element.x = 550;
+                this.element.y = 750;
                 break;
             case 49:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 11;
+                this.element.x = 950;
+                this.element.y = 850;
                 break;
             case 56:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 53;
+                this.element.x = 750;
+                this.element.y = 450;
                 break;
             case 62:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 19;
+                this.element.x = 150;
+                this.element.y = 850;
                 break;
             case 64:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 60;
+                this.element.x = 50;
+                this.element.y = 450;
                 break;
             case 87:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 24;
+                this.element.x = 350;
+                this.element.y = 750;
                 break;
             case 93:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 73;
+                this.element.x = 750;
+                this.element.y = 250;
                 break;
             case 95:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 75;
+                this.element.x = 550;
+                this.element.y = 250;
                 break;
             case 98:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 78;
+                this.element.x = 250;
+                this.element.y = 250;
                 break;
             case 1:
+
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 38;
+                this.element.x = 250;
+                this.element.y = 650;
                 break;
             case 4:
+
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 14;
+                this.element.x = 650;
+                this.element.y = 850;
                 break;
             case 9:
+
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 31;
+                this.element.x = 950;
+                this.element.y = 650;
                 break;
             case 21:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 42;
+                this.element.x = 150;
+                this.element.y = 550;
                 break;
             case 28:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 84;
+                this.element.x = 350;
+                this.element.y = 150;
                 break;
             case 36:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 44;
+                this.element.x = 350;
+                this.element.y = 550;
                 break;
             case 51:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 67;
+                this.element.x = 650;
+                this.element.y = 350;
                 break;
             case 71:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 91;
+                this.element.x = 950;
+                this.element.y = 50;
                 break;
             case 80:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = 100;
+                this.element.x = 50;
+                this.element.y = 50;
                 break;
             default:
+                this.defaultPos(space);
+                this.setSVG(space);
                 this.endPosition = space;
 
         }
 
-        //index is the board space - 1
-        let index = space - 1;
-
-        // if in the bottom row (1)
-        if (index < 10) {
-
-            let y = 950; //y position for entire row
-            let x = index * 100 + 50; //column 1 is at 50px, then 150, 250 and so on
-            //console.log("Row 1: " + (index * 100 + 50))
-            this.element = {
-                x: x,
-                y: y
-            }
-
-        } //if in row 2
-        else if (index >= 10 && index < 20) {
-
-            let y = 850; //y position for entire row
-            let rowIndex = Math.abs((index - 10) - 9); //column 1 is 
-            let x = rowIndex * 100 + 50;
-            //console.log("Row 2: " + (rowIndex * 100 + 50))
-            this.element = {
-                x: x,
-                y: y
-            }
-
-        } //if in row 3
-        else if (index >= 20 && index < 30) {
-
-            let y = 750;
-            let x = (index * 100 + 50) - 2000;
-            //console.log("Row 3: " + ((index * 100 + 50) - 2000))
-            this.element = {
-                x: x,
-                y: y
-            }
-
-        } //if in row 4
-        else if (index >= 30 && index < 40) {
-
-            let y = 650;
-            let rowIndex = Math.abs((index - 30) - 9); //column 1 is 
-            let x = rowIndex * 100 + 50;
-            //console.log("Row 4: " + (rowIndex * 100 + 50))
-            this.element = {
-                x: x,
-                y: y
-            }
-
-        } //if in row 5
-        else if (index >= 40 && index < 50) {
-
-            let y = 550;
-            let x = (index * 100 + 50) - 4000;
-            //console.log("Row 5: " + ((index * 100 + 50) - 4000))
-            this.element = {
-                x: x,
-                y: y
-            }
-
-
-        } //if in row 6
-        else if (index >= 50 && index < 60) {
-
-            let y = 450;
-            let rowIndex = Math.abs((index - 50) - 9); //column 1 is 
-            let x = rowIndex * 100 + 50;
-            //console.log("Row 6: " + (rowIndex * 100 + 50))
-            this.element = {
-                x: x,
-                y: y
-            }
 
 
 
-        } //if in row 7
-        else if (index >= 60 && index < 70) {
-
-            let y = 350;
-            let x = (index * 100 + 50) - 6000;
-            //console.log("Row 7: " + ((index * 100 + 50) - 6000))
-            this.element = {
-                x: x,
-                y: y
-            }
 
 
 
-        } //if in row 8
-        else if (index >= 70 && index < 80) {
-
-            let y = 250;
-            let rowIndex = Math.abs((index - 70) - 9); //column 1 is 
-            let x = rowIndex * 100 + 50;
-            //console.log("Row 8: " + (rowIndex * 100 + 50))
-            this.element = {
-                x: x,
-                y: y
-            }
 
 
 
-        } //if in row 9
-        else if (index >= 80 && index < 90) {
-
-            let y = 150;
-            let x = (index * 100 + 50) - 8000;
-            //console.log("Row 9: " + ((index * 100 + 50) - 8000))
-            this.element = {
-                x: x,
-                y: y
-            }
 
 
-        } //if in row 10 (the top row)
-        else {
+    }
 
-            let y = 50;
-            let rowIndex = Math.abs((index - 90) - 9); //column 1 is 
-            let x = rowIndex * 100 + 50;
-            //console.log("Row 10: " + (rowIndex * 100 + 50))
-            this.element = {
-                x: x,
-                y: y
-            }
+    //set svg position for spaces that arent chutes or ladders
+    defaultPos(space) {
 
+                //index is the board space - 1
+                let index = space - 1;
 
+                // if in the bottom row (1)
+                if (index < 10) {
+        
+                    let y = 950; //y position for entire row
+                    let x = index * 100 + 50; //column 1 is at 50px, then 150, 250 and so on
+                    //console.log("Row 1: " + (index * 100 + 50))
+                    this.element = {
+                        x: x,
+                        y: y
+                    }
+        
+                } //if in row 2
+                else if (index >= 10 && index < 20) {
+        
+                    let y = 850; //y position for entire row
+                    let rowIndex = Math.abs((index - 10) - 9); //column 1 is 
+                    let x = rowIndex * 100 + 50;
+                    //console.log("Row 2: " + (rowIndex * 100 + 50))
+                    this.element = {
+                        x: x,
+                        y: y
+                    }
+        
+                } //if in row 3
+                else if (index >= 20 && index < 30) {
+        
+                    let y = 750;
+                    let x = (index * 100 + 50) - 2000;
+                    //console.log("Row 3: " + ((index * 100 + 50) - 2000))
+                    this.element = {
+                        x: x,
+                        y: y
+                    }
+        
+                } //if in row 4
+                else if (index >= 30 && index < 40) {
+        
+                    let y = 650;
+                    let rowIndex = Math.abs((index - 30) - 9); //column 1 is 
+                    let x = rowIndex * 100 + 50;
+                    //console.log("Row 4: " + (rowIndex * 100 + 50))
+                    this.element = {
+                        x: x,
+                        y: y
+                    }
+        
+                } //if in row 5
+                else if (index >= 40 && index < 50) {
+        
+                    let y = 550;
+                    let x = (index * 100 + 50) - 4000;
+                    //console.log("Row 5: " + ((index * 100 + 50) - 4000))
+                    this.element = {
+                        x: x,
+                        y: y
+                    }
+        
+        
+                } //if in row 6
+                else if (index >= 50 && index < 60) {
+        
+                    let y = 450;
+                    let rowIndex = Math.abs((index - 50) - 9); //column 1 is 
+                    let x = rowIndex * 100 + 50;
+                    //console.log("Row 6: " + (rowIndex * 100 + 50))
+                    this.element = {
+                        x: x,
+                        y: y
+                    }
+        
+        
+        
+                } //if in row 7
+                else if (index >= 60 && index < 70) {
+        
+                    let y = 350;
+                    let x = (index * 100 + 50) - 6000;
+                    //console.log("Row 7: " + ((index * 100 + 50) - 6000))
+                    this.element = {
+                        x: x,
+                        y: y
+                    }
+        
+        
+        
+                } //if in row 8
+                else if (index >= 70 && index < 80) {
+        
+                    let y = 250;
+                    let rowIndex = Math.abs((index - 70) - 9); //column 1 is 
+                    let x = rowIndex * 100 + 50;
+                    //console.log("Row 8: " + (rowIndex * 100 + 50))
+                    this.element = {
+                        x: x,
+                        y: y
+                    }
+        
+        
+        
+                } //if in row 9
+                else if (index >= 80 && index < 90) {
+        
+                    let y = 150;
+                    let x = (index * 100 + 50) - 8000;
+                    //console.log("Row 9: " + ((index * 100 + 50) - 8000))
+                    this.element = {
+                        x: x,
+                        y: y
+                    }
+        
+        
+                } //if in row 10 (the top row)
+                else {
+        
+                    let y = 50;
+                    let rowIndex = Math.abs((index - 90) - 9); //column 1 is 
+                    let x = rowIndex * 100 + 50;
+                    //console.log("Row 10: " + (rowIndex * 100 + 50))
+                    this.element = {
+                        x: x,
+                        y: y
+                    }
+        
+        
+        
+                }
 
-        }
+    }
 
-
-
+    setSVG(space) {
         this.element.svg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 
         //this.playerMarker.setAttribute('id', this.number);
@@ -386,12 +495,6 @@ class GameBoardSpace {
 
         //uncomment to show gameboard
         svg.appendChild(this.element.svg);
-
-
-
-
-
-
     }
 
 
