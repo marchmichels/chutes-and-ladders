@@ -7,37 +7,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chutes and Ladders</title>
     <link rel="stylesheet" href="css/styles.css">
+    <!-- Bootstrap css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 
 </head>
 
 <body>
 
-    <h1>Chutes and Ladders</h1>
-
     <!-- This div is displayed when the page loads and is hidden after player number selection -->
-    <div id="player-select">
+    <div id="player-select" class="h-100 d-flex align-items-center justify-content-center">
 
-        <h4>How many players?</h4>
-        <button onclick="startGame(1)">One</button>
-        <button onclick="startGame(2)">Two</button>
-        <button onclick="startGame(3)">Three</button>
-        <button onclick="startGame(4)">Four</button>
 
+
+
+
+
+            <div class="d-flex flex-column">
+
+     
+
+                <div class="d-flex justify-content-center">
+                    <h1>Chutes and Ladders</h1>
+                </div>
+                    
+
+                <div class="d-flex justify-content-center">
+                    <h4>How many players?</h4>
+                </div>
+
+
+ 
+    
+
+                <div class="d-flex justify-content-center">
+                        <button onclick="startGame(1)" class="btn btn-primary btn-sm m-1">One</button>
+                        <button onclick="startGame(2)" class="btn btn-primary btn-sm m-1">Two</button>
+                        <button onclick="startGame(3)" class="btn btn-primary btn-sm m-1">Three</button>
+                        <button onclick="startGame(4)" class="btn btn-primary btn-sm m-1">Four</button>
+                </div>
+
+
+
+            </div>
     </div>
+
+
+
+
+
+
+
 
 
 
     <!-- This div is hidden when the page loads and is displayed when the game starts -->
-    <div id="game-board" style="display: none;">
 
-        <p id="message"></p>
-        <button id="play-button" onclick="game.play()">Play</button>
 
+    <div id="game-board" class="container-fluid d-none">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1>Chutes and Ladders</h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <svg id="svg" width="90%" viewBox="0 0 1000 1000"></svg>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-md-6">
+            <div class="h-100 d-flex align-items-center justify-content-center">
+                <div class="d-flex flex-column">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-md-12">
+                            Spinner SVG will display here
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-center">
+                        <div id="message" class="col-md-12">
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-md-12 d-flex justify-content-center">
+                            <button id="play-button" class="d-none btn btn-primary" onclick="game.play()">Play</button>
+                            <button id="reset-button" class="d-none btn btn-warning" onclick="resetGame()">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+        </div>
     </div>
 
 
-    <svg id="svg" width="1000" height="1000" >
-    </svg>
+
+
 
 
 

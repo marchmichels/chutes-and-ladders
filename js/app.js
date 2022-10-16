@@ -1,4 +1,5 @@
 let playButton = document.getElementById("play-button");    //get play button element to disable when the game is over
+let resetButton = document.getElementById("reset-button");
 let playerSelect = document.getElementById("player-select");
 let gameBoard = document.getElementById("game-board");
 let messageText = document.getElementById("message");
@@ -10,11 +11,21 @@ let game;   //object of the Game class
 function startGame(players) {
 
     game = new Game(players);
-    playerSelect.style.display = "none";
-    gameBoard.style.display = "block";
+    playerSelect.classList.add("d-none");
+    gameBoard.classList.remove("d-none");
+    playButton.classList.remove("d-none");
     playButton.disabled = false;
-    playButton.style.display = "block";
-    messageText.innerText = "";
+    //messageText.innerHTML = "Message will display here JS";
+
+}
+
+function resetGame() {
+    if (confirm("Play Again?")) {
+        gameBoard.classList.add("d-none");
+        playerSelect.classList.remove("d-none");
+        resetButton.classList.add("d-none");
+    }
+
 
 }
 
@@ -35,6 +46,7 @@ class Game {
         }
         this.spinner = new Spinner;
         this.turn = 1;
+        this.message = Array;
 
     }
 
@@ -45,10 +57,17 @@ class Game {
         if (this.turn > this.players.length - 1) {
             this.turn = 1;
         }
+        this.message[0] = "Player " + this.turn;
 
+        
         this.players[this.turn].move(this.spinner.spin());
 
-        console.log("Player " + this.turn + " lands on: " + this.players[this.turn].getPos());
+        this.message[1] = "Spins: " + this.spinner.getLastSpin();
+
+
+        //console.log("Player " + this.turn + " lands on: " + this.players[this.turn].getPos());
+
+        this.message[2] = "Lands on space: " + this.players[this.turn].getPos();
 
         if (this.players[this.turn].getPos() == 100 | this.players[this.turn].getPos() == 80) {
 
@@ -57,13 +76,20 @@ class Game {
             let pos = this.gameBoard.checkBoard(this.players[this.turn].getPos());
 
             this.players[this.turn].setPos(pos.boardNumber, pos.element.x, pos.element.y);
-            messageText.innerText = "Player " + this.turn + " wins!";
+            //messageText.innerText = "Player " + this.turn + " wins!";
+            this.message[4] = "Player " + this.turn + " wins!";
+            this.message[3] = "Ends turn on space: " + this.players[this.turn].getPos();
             //this.setMessage("Player " + this.turn + " wins!");
-            console.log("ends on: " + this.players[this.turn].getPos());
-            console.log("Player " + this.turn + " wins!");
-            playerSelect.style.display = "block";
+            //console.log("ends on: " + this.players[this.turn].getPos());
+            //console.log("Player " + this.turn + " wins!");
+            //playerSelect.style.display = "block";
             playButton.disabled = true;
-            playButton.style.display = "none";
+            //playButton.style.display = "none";
+            playButton.classList.add("d-none");
+            resetButton.classList.remove("d-none");
+
+            this.setMessage();
+
         }
         else if (this.players[this.turn].getPos() > 100) {
 
@@ -71,7 +97,17 @@ class Game {
 
             let pos = this.gameBoard.checkBoard(this.players[this.turn].getPos() - this.spinner.getLastSpin())
             this.players[this.turn].setPos(pos.boardNumber, pos.element.x, pos.element.y);
-            console.log("ends on: " + this.players[this.turn].getPos());
+
+
+
+            this.message[3] = "Ends turn on space: " + this.players[this.turn].getPos();
+
+            this.message[4] = "";
+
+            //console.log("ends on: " + this.players[this.turn].getPos());
+
+            this.setMessage();
+
             this.turn ++;
         }
         else {
@@ -80,16 +116,38 @@ class Game {
 
             let pos = this.gameBoard.checkBoard(this.players[this.turn].getPos());
             this.players[this.turn].setPos(pos.boardNumber, pos.element.x, pos.element.y);
-            console.log("ends on: " + this.players[this.turn].getPos());
-            console.log("");
+
+            this.message[3] = "Ends turn on space: " + this.players[this.turn].getPos();
+
+            this.message[4] = "";
+
+            // console.log("ends on: " + this.players[this.turn].getPos());
+            // console.log("");
+            this.setMessage();
+
             this.turn ++;
         }
+
+        //play the game in the console
+        // console.log(this.message[0]);
+        // console.log(this.message[1]);
+        // console.log(this.message[2]);
+        // console.log(this.message[3]);
+        // console.log(this.message[4]);
 
     }
 
 
-    setMessage(message) {
-        this.message = message;
+    setMessage() {
+        messageText.innerHTML = `
+        <ul>
+            <li>${this.message[0]}</li>
+            <li>${this.message[1]}</li>
+            <li>${this.message[2]}</li>
+            <li>${this.message[3]}</li>
+            <li>${this.message[4]}</li>
+        </ul>
+        `
     }
 
 }
@@ -102,7 +160,7 @@ class Spinner {
         let min = Math.ceil(1);
         let max = Math.floor(6);
         this.thisSpin = Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
-        console.log("spinner lands on: " + this.thisSpin);
+        //console.log("spinner lands on: " + this.thisSpin);
         return this.thisSpin;
 
     }
@@ -131,7 +189,7 @@ class Player {
 
     move(spaces) {
         //move the player spaces
-        console.log("player " + this.number + " moves " + spaces + " spaces");
+        //console.log("player " + this.number + " moves " + spaces + " spaces");
 
         this.boardPos += spaces;
 

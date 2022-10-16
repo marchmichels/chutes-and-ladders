@@ -1,4 +1,11 @@
+html,
+body {
+  height: 100%;
 
+}
+li {
+    list-style-type: none;
+}
 .player1 {
     r: 10px;
     fill: #000;
@@ -21,4 +28,9 @@
     r: 10px;
     fill: rgb(60, 0, 255);
 }
-
+#player-select {
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+#game-board {
+    font-family: "Lucida Console", "Courier New", monospace;
+}
