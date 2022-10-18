@@ -1,35 +1,39 @@
 let playButton = document.getElementById("play-button");    //get play button element to disable when the game is over
-let resetButton = document.getElementById("reset-button");
-let playerSelect = document.getElementById("player-select");
-let gameBoard = document.getElementById("game-board");
-let messageText = document.getElementById("message");
-let svg = document.getElementById("svg");
+let resetButton = document.getElementById("reset-button");  //get reset button element to enable when the game is over
+let playerSelect = document.getElementById("player-select");    //get player-select screen div to hide after player selection
+let gameBoard = document.getElementById("game-board");      //get game-goard div to display when the game starts
+let messageText = document.getElementById("message");   //get message div to display game info
+let svg = document.getElementById("svg");               //get gameboard svg to animate player movement
+let arrow = document.getElementById("Arrow");           //get arrow from spinner SVG to animate
 
 let game;   //object of the Game class
 
-
+//the game starts when the number of players is selected
 function startGame(players) {
 
     game = new Game(players);
-    playerSelect.classList.add("d-none");
-    gameBoard.classList.remove("d-none");
-    playButton.classList.remove("d-none");
-    playButton.disabled = false;
-    //messageText.innerHTML = "Message will display here JS";
+    playerSelect.classList.add("d-none");   //hide player select div
+    gameBoard.classList.remove("d-none");   //show gameboard div
+    playButton.classList.remove("d-none");  //show play button
+    playButton.disabled = false;            //enable play button
 
 }
 
+//reset the game after player confirms
 function resetGame() {
+
     if (confirm("Play Again?")) {
-        gameBoard.classList.add("d-none");
-        playerSelect.classList.remove("d-none");
-        resetButton.classList.add("d-none");
+
+        game.reset();
+        gameBoard.classList.add("d-none");          //hide gameboard
+        playerSelect.classList.remove("d-none");    //show player-select screen
+        resetButton.classList.add("d-none");        //hide reset button
+
     }
 
-
 }
 
-
+//The Game Class
 class Game {
 
     gameBoard; // an array of gameBoardSpace objects
@@ -47,6 +51,9 @@ class Game {
         this.spinner = new Spinner;
         this.turn = 1;
         this.message = Array;
+        this.message[0] = "Player " + this.turn;        //set message to display what the current player's turn is
+        this.message[1] = this.message[2] = this.message[3] = this.message[4] = "";       //no message exists 1st turn
+        this.setMessage();
 
     }
 
@@ -64,9 +71,6 @@ class Game {
 
         this.message[1] = "Spins: " + this.spinner.getLastSpin();
 
-
-        //console.log("Player " + this.turn + " lands on: " + this.players[this.turn].getPos());
-
         this.message[2] = "Lands on space: " + this.players[this.turn].getPos();
 
         if (this.players[this.turn].getPos() == 100 | this.players[this.turn].getPos() == 80) {
@@ -75,7 +79,7 @@ class Game {
 
             let pos = this.gameBoard.checkBoard(this.players[this.turn].getPos());
 
-            this.players[this.turn].setPos(pos.boardNumber, pos.element.x, pos.element.y);
+            this.players[this.turn].setPos(pos);
             //messageText.innerText = "Player " + this.turn + " wins!";
             this.message[4] = "Player " + this.turn + " wins!";
             this.message[3] = "Ends turn on space: " + this.players[this.turn].getPos();
@@ -96,15 +100,13 @@ class Game {
             //if the player position passes the end of the gameboard, subtract the last spin from thier position
 
             let pos = this.gameBoard.checkBoard(this.players[this.turn].getPos() - this.spinner.getLastSpin())
-            this.players[this.turn].setPos(pos.boardNumber, pos.element.x, pos.element.y);
+            this.players[this.turn].setPos(pos);
 
 
 
             this.message[3] = "Ends turn on space: " + this.players[this.turn].getPos();
 
             this.message[4] = "";
-
-            //console.log("ends on: " + this.players[this.turn].getPos());
 
             this.setMessage();
 
@@ -115,25 +117,16 @@ class Game {
             //normal turn
 
             let pos = this.gameBoard.checkBoard(this.players[this.turn].getPos());
-            this.players[this.turn].setPos(pos.boardNumber, pos.element.x, pos.element.y);
+            this.players[this.turn].setPos(pos);
 
             this.message[3] = "Ends turn on space: " + this.players[this.turn].getPos();
 
             this.message[4] = "";
 
-            // console.log("ends on: " + this.players[this.turn].getPos());
-            // console.log("");
             this.setMessage();
 
             this.turn ++;
         }
-
-        //play the game in the console
-        // console.log(this.message[0]);
-        // console.log(this.message[1]);
-        // console.log(this.message[2]);
-        // console.log(this.message[3]);
-        // console.log(this.message[4]);
 
     }
 
@@ -150,18 +143,73 @@ class Game {
         `
     }
 
+    reset() {
+        for (let i = 1; i < this.players.length; i++) {
+            this.players[i].removePlayer();
+        }
+    }
+
 }
 
 
 class Spinner {
     thisSpin;
+    rotation;
+    
+    constructor() {
+        this.rotation = 0;
+    }
+
     spin() {
         //return a random number 1-6
         let min = Math.ceil(1);
         let max = Math.floor(6);
         this.thisSpin = Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
-        //console.log("spinner lands on: " + this.thisSpin);
+        this.spinSpinner();
+
+        switch(this.thisSpin) {
+            case 1:
+                this.rotation = 233;
+                break;
+            case 2:
+                this.rotation = 0;
+                break;
+            case 3:
+                this.rotation = 293;
+                break;
+            case 4:
+                this.rotation = 122;
+                break;
+            case 5:
+                this.rotation = 67;
+                break;
+            case 6:
+                this.rotation = 180;
+        }
+
+        //console.log(this.rotation);
+
+
+        //animate spinner
+        this.spinSpinner();
+
         return this.thisSpin;
+
+    }
+    spinSpinner() {
+
+
+        gsap.to(arrow, {transformOrigin:"50% 50%"});
+        gsap.to(arrow, {rotation: 0, duration: .1, ease: "none"});
+        gsap.to(arrow, {rotation: 180, duration: .1, delay: .1});
+        gsap.to(arrow, {rotation: 300, duration: .1, delay: .1});
+        gsap.to(arrow, {rotation: 40, duration: .1, delay: .1});
+        gsap.to(arrow, {rotation: 0, duration: .1, delay: .1});
+        gsap.to(arrow, {rotation: this.rotation, duration: 1, delay: .5, ease: "none"});
+
+
+
+
 
     }
     getLastSpin() {
@@ -189,8 +237,6 @@ class Player {
 
     move(spaces) {
         //move the player spaces
-        //console.log("player " + this.number + " moves " + spaces + " spaces");
-
         this.boardPos += spaces;
 
     }
@@ -199,13 +245,29 @@ class Player {
         return this.boardPos;
     }
 
-    setPos(position, x, y) {
+    setPos(pos) {
         //update the player object position
-        this.boardPos = position;
+        this.boardPos = pos.boardNumber;
 
         //animate player marker movement
-        gsap.to(this.playerMarker, {duration: 1, attr: {cx: x, cy: y}, ease: "none"});
+        gsap.to(this.playerMarker, {duration: 1, attr: {cx: pos.element.x, cy: pos.element.y}, ease: "none"});
 
+
+        //if land on chute or ladder, animate movement up the ladder or down the chute
+        if(pos.element.endX) {
+            if(pos.element.chute === true) {
+                //console.log("chute");
+                gsap.to(this.playerMarker, {duration: 1, delay: 1, attr: {cx: pos.element.endX, cy: pos.element.endY}, ease: "none"});
+            } else {
+                //console.log("ladder");
+                gsap.to(this.playerMarker, {duration: 1, delay: 1, attr: {cx: pos.element.endX, cy: pos.element.endY}, ease: "none"});
+            }
+
+        }
+
+    }
+    removePlayer() {
+        svg.removeChild(this.playerMarker);
     }
 }
 
@@ -214,8 +276,6 @@ class Player {
 class GameBoardSpace {
     endPosition;
     element;
-    x;
-    y;
 
     constructor(endPosition) {
         this.endPosition = endPosition;
@@ -237,140 +297,130 @@ class GameBoardSpace {
         switch (space) {
             case 16:                            // board space 16 is the top of a "chute" on the gameboard
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 6;           // is a player lands on space 16 they slide down the chute to space 6
-                this.element.x = 550;           
-                this.element.y = 950;              
+                this.element.endX = 550;           
+                this.element.endY = 950;
+                this.element.chute = true;              
                 break;
             case 47:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 26;
-                this.element.x = 550;
-                this.element.y = 750;
+                this.element.endX = 550;
+                this.element.endY = 750;
+                this.element.chute = true;              
                 break;
             case 49:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 11;
-                this.element.x = 950;
-                this.element.y = 850;
+                this.element.endX = 950;
+                this.element.endY = 850;
+                this.element.chute = true;              
                 break;
             case 56:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 53;
-                this.element.x = 750;
-                this.element.y = 450;
+                this.element.endX = 750;
+                this.element.endY = 450;
+                this.element.chute = true;              
                 break;
             case 62:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 19;
-                this.element.x = 150;
-                this.element.y = 850;
+                this.element.endX = 150;
+                this.element.endY = 850;
+                this.element.chute = true;              
                 break;
             case 64:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 60;
-                this.element.x = 50;
-                this.element.y = 450;
+                this.element.endX = 50;
+                this.element.endY = 450;
+                this.element.chute = true;              
                 break;
             case 87:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 24;
-                this.element.x = 350;
-                this.element.y = 750;
+                this.element.endX = 350;
+                this.element.endY = 750;
+                this.element.chute = true;              
                 break;
             case 93:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 73;
-                this.element.x = 750;
-                this.element.y = 250;
+                this.element.endX = 750;
+                this.element.endY = 250;
+                this.element.chute = true;              
                 break;
             case 95:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 75;
-                this.element.x = 550;
-                this.element.y = 250;
+                this.element.endX = 550;
+                this.element.endY = 250;
+                this.element.chute = true;              
                 break;
             case 98:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 78;
-                this.element.x = 250;
-                this.element.y = 250;
+                this.element.endX = 250;
+                this.element.endY = 250;
+                this.element.chute = true;              
                 break;
             case 1:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 38;
-                this.element.x = 250;
-                this.element.y = 650;
+                this.element.endX = 250;
+                this.element.endY = 650;
                 break;
             case 4:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 14;
-                this.element.x = 650;
-                this.element.y = 850;
+                this.element.endX = 650;
+                this.element.endY = 850;
                 break;
             case 9:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 31;
-                this.element.x = 950;
-                this.element.y = 650;
+                this.element.endX = 950;
+                this.element.endY = 650;
                 break;
             case 21:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 42;
-                this.element.x = 150;
-                this.element.y = 550;
+                this.element.endX = 150;
+                this.element.endY = 550;
                 break;
             case 28:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 84;
-                this.element.x = 350;
-                this.element.y = 150;
+                this.element.endX = 350;
+                this.element.endY = 150;
                 break;
             case 36:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 44;
-                this.element.x = 350;
-                this.element.y = 550;
+                this.element.endX = 350;
+                this.element.endY = 550;
                 break;
             case 51:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 67;
-                this.element.x = 650;
-                this.element.y = 350;
+                this.element.endX = 650;
+                this.element.endY = 350;
                 break;
             case 71:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 91;
-                this.element.x = 950;
-                this.element.y = 50;
+                this.element.endX = 950;
+                this.element.endY = 50;
                 break;
             case 80:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = 100;
-                this.element.x = 50;
-                this.element.y = 50;
+                this.element.endX = 50;
+                this.element.endY = 50;
                 break;
             default:
                 this.defaultPos(space);
-                this.setSVG(space);
                 this.endPosition = space;
 
         }
@@ -493,25 +543,6 @@ class GameBoardSpace {
 
     }
 
-    setSVG(space) {
-        this.element.svg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-
-        this.element.svg.setAttribute("x", this.element.x - 50);
-        this.element.svg.setAttribute("width", 100);
-        this.element.svg.setAttribute("y", this.element.y -50);
-        this.element.svg.setAttribute("height", 100);
-
-        if(space % 2 == 0) {
-            this.element.svg.setAttribute("fill", "yellow")
-
-        } else {
-            this.element.svg.setAttribute("fill", "lightyellow")
-        }
-
-
-        //uncomment to show gameboard
-        svg.appendChild(this.element.svg);
-    }
 
 
     getPos() {
@@ -545,4 +576,3 @@ class GameBoard {
         return this.gameboard[position].land();
     }
 }
-
