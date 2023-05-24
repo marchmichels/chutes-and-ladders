@@ -207,10 +207,6 @@ class Spinner {
         gsap.to(arrow, {rotation: 0, duration: .1, delay: .1});
         gsap.to(arrow, {rotation: this.rotation, duration: 1, delay: .5, ease: "none"});
 
-
-
-
-
     }
     getLastSpin() {
         return this.thisSpin;
